@@ -1,39 +1,46 @@
-// Boilerplate Code for Virtual Assistant API
 const express = require('express');
 const app = express();
 
-/*
-Task:
-You need to build an API for a virtual assistant that provides customized responses.
+// Function to get the current day of the week
+const getDayMessage = () => {
+  const daysOfWeek = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday"
+  };
+  
+  const dayIndex = new Date().getDay();  // Get current day index (0-6)
+  return daysOfWeek[dayIndex];
+};
 
-Requirements:
-1. Create a GET endpoint at "/assistant/greet".
-2. The endpoint should accept a "name" as a query parameter (e.g., /assistant/greet?name=John).
-3. The API should return a JSON response with:
-   a. A personalized greeting using the name provided.
-   b. A cheerful message based on the current day of the week.
+// Endpoint to handle personalized greeting
+app.get('/assistant/greet', (req, res) => {
+  const userName = req.query.name || 'User';  // Default to 'User' if no name is provided
+  const day = getDayMessage();
 
-Example Responses:
-- For Monday:
-  {
-    "welcomeMessage": "Hello, John! Welcome to our assistant app!",
-    "dayMessage": "Happy Monday! Start your week with energy!"
+  let dayMessage = "Have a wonderful day!"; // Default message for other days
+  
+  // Customize day-specific message
+  if (day === "Monday") {
+    dayMessage = "Happy Monday! Start your week with energy!";
+  } else if (day === "Friday") {
+    dayMessage = "It's Friday! The weekend is near!";
   }
-- For Friday:
-  {
-    "welcomeMessage": "Hello, John! Welcome to our assistant app!",
-    "dayMessage": "It's Friday! The weekend is near!"
-  }
-- For other days:
-  {
-    "welcomeMessage": "Hello, John! Welcome to our assistant app!",
-    "dayMessage": "Have a wonderful day!"
-  }
 
-Add the required logic below to complete the API.
-*/
+  const response = {
+    welcomeMessage: `Hello, ${userName}! Welcome to our assistant app!`,
+    dayMessage: dayMessage
+  };
 
+  res.json(response);  // Send the response as a JSON object
+});
+
+// Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Virtual Assistant API is running on http://localhost:${PORT}`);
+  console.log(`Virtual Assistant API is running on http://localhost:${PORT}`);
 });
